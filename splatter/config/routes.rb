@@ -56,4 +56,9 @@ get 'users/splatts/:id' => 'users#splatts'
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  get 'users/follows/:id' => 'users#show_follows'
+  get 'users/followers/:id' => 'users#show_followers'
+  post 'users/follows' => 'users#add_follows'
+  delete 'users/follows/:id/:follows_id' => 'users#delete_follows'
 end

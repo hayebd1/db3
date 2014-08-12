@@ -48,11 +48,43 @@ class UsersController < ApplicationController
     head :no_content
   end
  
+  # GET /users/follows/[:id]
+  def show_follows
+    @user = User.find(params[:id])
 
-def splatts
-@user = User.find(params[:id])
-render json: @user.splatts
-end
+    render json: @user.follows
+  end 
+
+  # GET /users/followers/[:id]
+  def show_followers
+    @user = User.find(params[:id])
+
+    render json: @user.followers
+  end
+
+  # POST /users/follows
+  def add_follows
+    @user = User.find(params[:id])
+    @follows = User.find(params[:follows_id])
+
+    if @user.follows << @follows
+      head :no_content
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /users/follows/1/2
+  def delete_follows
+    @user = User.find(params[:id])
+    @follows = User.find(params[:follows_id])
+
+    if @user.follows.delete(@follows)
+      head :no_content
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
 
 private
 
