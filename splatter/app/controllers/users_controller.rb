@@ -62,6 +62,7 @@ class UsersController < ApplicationController
     render json: @user.followers
   end
 
+  # Line 3 says type "id":2 line 4 says type "follows_id":3
   # POST /users/follows
   def add_follows
     @user = User.find(params[:id])
@@ -85,6 +86,11 @@ class UsersController < ApplicationController
       render json: @user.errors, status: :unprocessable_entity
     end
   end
+
+def splatts
+  @user = User.find(params[:id])
+render json: @user.splatts
+end
 
 private
 
