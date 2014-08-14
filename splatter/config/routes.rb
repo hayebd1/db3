@@ -1,4 +1,6 @@
 Splatter::Application.routes.draw do
+  # edit out from 3.2 lab: get "splatter/index"
+  resources :splatter, only: [:index]
   resources :splatts, except: [:new, :edit]
   resources :users, except: [:new, :edit]
 

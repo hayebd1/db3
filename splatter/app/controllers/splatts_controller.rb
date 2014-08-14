@@ -1,6 +1,6 @@
 class SplattsController < ApplicationController
   # GET /splatts
-  # GET /splatts.json
+  # GET /splatts.json  
   def index
     @splatts = Splatt.all
 
@@ -37,6 +37,8 @@ class SplattsController < ApplicationController
 
     head :no_content
   end
+
+  
 
   private
 	def splatts_params(params)
