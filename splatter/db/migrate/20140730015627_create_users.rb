@@ -4,10 +4,10 @@ class CreateUsers < ActiveRecord::Migration
       validates :email, uniqueness: { case_sensitive: false}
       validates :password, length: {minimum: 8}, if: :strong?
       def strong?
-    password =~ /.*\d+.*/ && \
-    password =~ /.*[a-z]+.*/ && \
-    password =~ /.*[A-Z].*/
-     end
+      password =~ /.*\d+.*/ && \
+      password =~ /.*[a-z]+.*/ && \
+      password =~ /.*[A-Z].*/
+    end
       validates :name, presence: true
       t.text :blurb
 
@@ -16,5 +16,4 @@ class CreateUsers < ActiveRecord::Migration
   end
 end
 
-# t.string
-# t.text
+

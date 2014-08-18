@@ -62,7 +62,6 @@ class UsersController < ApplicationController
     render json: @user.followers
   end
 
-  # Line 3 says type "id":2 line 4 says type "follows_id":3
   # POST /users/follows
   def add_follows
     @user = User.find(params[:id])
@@ -87,21 +86,22 @@ class UsersController < ApplicationController
     end
   end
 
-def splatts
-  @user = User.find(params[:id])
-render json: @user.splatts
-end
+   def splatts
+     @user = User.find(params[:id])
+
+     render json: @user.splatts
+  end
 
   # GET  /users/splatts-feed/1
   def splatts_feed
     @feed = Splatt.find_by_sql("SELECT splatts.body, splatts.user_id, splatts.id, splatts.created_at FROM splatts JOIN follows ON follows.followed_id=splatts.user_id WHERE follows.follower_id=#{params[:id]} ORDER BY created_at DESC")
 
     render json: @feed
-end
+  end
 
-private
+    private
 
-def user_params(params)
-  params.permit(:email, :password, :name, :blurb)
-end
+   def user_params(params)
+     params.permit(:email, :password, :name, :blurb)
+  end
 end
