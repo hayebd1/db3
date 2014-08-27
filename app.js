@@ -5,7 +5,8 @@
 
 	app.controller('UserController', function() {
         // add your user code below
-
+	this.hello = "Hello World";
+	this.u = u1;
 
 
 

@@ -8,12 +8,22 @@
 	</head>
 	<body>
 		<div ng-controller="UserController as user">
+		
 		<!-- Add your HTML and Angular code below -->
+		
+		<p>{{user.hello}}</p>
+		<p>{{user.u.name }}, {{user.u.email}}, {{user.u.blurb}}</p>
+		
+		<div ng-repeat="splatt in user.feed">
+		<p>{{splatt.body}}</p>
+		</div>
+		
+		
 
 
 
-
-                <!-- Add your HTML and Angular code above -->
+		
+        <!-- Add your HTML and Angular code above -->
 
 		</div>
 	</body>
