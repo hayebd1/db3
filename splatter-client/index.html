@@ -1,58 +1,134 @@
 <!DOCTYPE html>
+<meta charset="UTF-8">
 <html ng-app="splatter-web">
 	<head>
-		<title>Basic Splatter Client</title>
+		<title>Splatter</title>
 		<script src="angular.min.js"></script>
 		<script src="angular-resource.js"></script>
 		<script src="app.js"></script>
+        <link rel="stylesheet" type="text/css" href="index.css" />    
 	</head>
 	<body>
 		<div ng-controller="UserController as user">
-		<h1>Splatter NZ<h1> <br />
-			<h2>Log In Here</h2>
-			<form ng-submit="user.login()">
-				<input type="text" ng-model="user.data.id" />
-				<input type="submit" value="Login" />
-			</form>
-			<p>User ID: {{user.loggedin_user.id}}</p>
-			<p>Name: {{user.loggedin_user.name}}</p>
-			<p>Email: {{user.loggedin_user.email}}</p>
-			<p>{{user.loggedin_user.blurb}}</p>
-			<div> <br />
-			
-			<h2>Update User Details</h2>
-				<form ng-submit="user.updateUser()">
-					<input type="text" ng-model="user.data.name" placeholder = "username" /> <br />
-					<input type="text" ng-model="user.data.email" placeholder = "email" /> <br />
-					<textarea ng-model="user.data.blurb" placeholder = "blurb"></textarea> <br />
-					<input type="submit" value="Update" />
-				</form>
-			</div> <br />
+		<header>
+		<h1>Splatter NZ</h1>
+	</header><br />
+		<section id="intro">
+		<header>
+			<h2>Welcome to NZ'S #1 Social Networking Site</h2>
+		</header>
+		<p>Here you can create a new account so you can add friends and post splatts!</p>
+		<img src="splatt.jpg"/>
+	</section>
+
+			<!--USER DETAILS-->
+            
+			<h3>{{user.hello}}</h3>
+			<h3>{{user.u.name}}</h3>
+			<h3>{{user.u.email}}</h3>
+			<h3>{{user.u.blurb}}</h3>
+        
 			<div>
-			
-			<h2>Create New User</h2>
-				<form ng-submit="user.createUser()">
-					<input type="text" ng-model="user.data.cname" placeholder = "type username here"  /> <br />
-					<input type="text" ng-model="user.data.cemail" placeholder = "type email here" /> <br />
-					<input type="text" ng-model="user.data.cpassword" placeholder = "type password here" /> <br />
-					<textarea ng-model="user.data.cblurb" placeholder = "type blurb here"></textarea> <br />
-					<input type="submit" value="Create" />
-				</form>
-			</div> <br />
-			<div>
-				<form ng-submit="user.delUser()">
-					<select ng-model="user.data.delid">
+
+				<section id="intro">
+				id: {{user.u.id}}
+				<!--SIGN IN WITH ID-->
+				<h3>Register</h3>			
+				<form ng-controller="UpdateFormController as form" ng-submit="form.updateUser(user)">
+					ID<input ng-model="form.data.name" type="text"/>
+					<input type="submit" value="Login"/>
+				</form><br />
+				
+				<!--CREATE USER-->
+				<h3>Create New User</h3>
+				<form ng-controller="NewUserFormController as form" ng-submit="form.newUser(user)">
+					<input ng-model="form.data.name" type="text" placeholder="Name"/><br/>
+					<input ng-model="form.data.email" type="text"placeholder="Email"/><br/>
+					<input ng-model="form.data.password" type="password" placeholder="password"/><br/>
+					<input ng-model="form.data.blurb" type="text" placeholder="Blurb"><br/>
+					<input type="submit" value="Create"/>
+				</form><br />
+				
+				<!--UPDATE-->
+				<h3>Update User Details</h3>			
+				<form ng-controller="UpdateUserController as form" ng-submit="form.updateUser(user)">
+					<input ng-model="form.data.name" type="text" placeholder = "username"/>
+					<input ng-model="form.data.blurb" type="text" placeholder = "Blurb"></input>
+					<input type="submit" value="Update"/>
+				</form><br />
+				
+				<!--SHOW USER SPLATTS-->
+            	<h3>Show Splatts</h3>			
+				<form ng-controller="ShowSplattsController as form" ng-submit="form.updateFeed(user)">
+					<select ng-model="form.data.id">
 						<option  ng-repeat="u in user.ulist">{{u.id}}</option> 
 					</select>
-					<input type="submit" value="Delete" />
-				</form>
-
-
+					<input type="submit" value="Show"/>
+				</form><br />
+            
+				<!--SPLATTS IN FEED-->
+				<div ng-repeat="splatt in usersfeed.splatt">
+					<h2>{{splatt.name}}</h2>
+					<p>{{splatt.message}}</p>
+					<p>{{splatt.created | date: 'dd/MM/yyyy h:mma'}}</p>
+				</div>			
+				
+				<!--DELETE USER-->
+				<h3>Delete Account!</h3>			
+				<form ng-controller="DeleteUserController as form" ng-submit="form.deleteUser(user)">
+					<select ng-model="form.data.id">
+						<option  ng-repeat="u in user.ulist">{{u.id}}</option> 
+					</select>
+					<input type="submit" value="Delete"/>
+				</form><br />
+				
+				
+				<!--POST SPLATTS-->
+				<h3>Post Splatt</h3>			
+				<form ng-controller="AddSplattController as form" ng-submit="form.addSplatt(user)">
+					<input ng-model="form.data.splatt" type="text" placeholder="Enter a new splatt" ></input>
+					<br /><input type="submit" value="Post Splatt"/>
+				</form><br />
+				
+				<!--FOLLOW USER-->
+				<h3>Follow Users</h3>
+				<form ng-controller="FollowUserController as form" ng-submit="form.followUser(user)">
+					<select ng-model="form.data.follows">
+						<option  ng-repeat="u in user.ulist">{{u.id}}</option> 
+					</select>
+				<input type="submit" value="Follow"/>
+				</form><br />
+				
+				<!--UNFOLLOW USER-->				
+				<h3>Unfollow User</h3>
+				<form ng-controller="UnfollowUserController as form" ng-submit="form.unfollowUser(user)">
+					<select ng-model="form.data.follows">
+						<option  ng-repeat="u in user.ulist">{{u.id}}</option> 
+					</select>
+					<input type="submit" value="Unfollow"/>
+				</form><br />          
 			</div>
-		
-	
+        
+            <!--login form end-->
 
+			<br/>
+    
+			<!-- 		SPLATTS FEED		-->
+			<section id="intro">
+			<h3>Splatt Feed</h3>
+			<div ng-repeat="splatt in user.feed.splatt">
+            	<p> </p>
+                 <h2>{{splatt.user_id}}</h2>
+				<p>{{splatt.body}}</p>
+				<p>{{splatt.created_at | date: 'dd/MM/yyyy h:mma'}}</p>
+                
+                <h2>{{splatt.users_name}}</h2>
+				<p>{{splatt.message}}</p>
+				<p>{{splatt.created | date: 'dd/MM/yyyy h:mma'}}</p>
+			</div></section>
+                <!-- Add your HTML and Angular code above -->
 
 		</div>
+		</section>
 	</body>
 </html>

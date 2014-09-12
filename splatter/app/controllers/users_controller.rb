@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter ::cors_preflight_check
+  before_filter :cors_preflight_check
   after_filter :cors_set_access_control_headers
 
   # GET /users
@@ -9,60 +9,26 @@ class UsersController < ApplicationController
 
     render json: @users
   end
+  
+  # GET /users/splatts-feed/1
+  def splatts_feed
+    @feed = Splatt.find_by_sql("SELECT splatts.body, splatts.user_id, splatts.id, splatts.created_at FROM splatts JOIN follows ON follows.followed_id=splatts.user_id WHERE follows.follower_id=#{params[:id]} ORDER BY created_at DESC")
 
-  # GET /users/1
-  # GET /users/1.json
-  def show
+    render json: @feed
+  end
+
+  # GET /users/splatts/[:id]
+  def splatts
     @user = User.find(params[:id])
-
-    render json: @user
+    
+    render json: @user.splatts
   end
 
-  # POST /users
-  # POST /users.json
-  def create
-    @user = User.new user_params(params[:user])
-
-    if @user.save
-      render json: @user, status: :created, location: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /users/1
-  # PATCH/PUT /users/1.json
-  def update
-    @user = User.find(params[:id])
-
-    if @user.update user_params(params[:user])
-      head :no_content
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /users/1
-  # DELETE /users/1.json
-  def destroy
-    @user = User.find(params[:id])
-    @user.destroy
-
-    head :no_content
-  end
- 
   # GET /users/follows/[:id]
   def show_follows
     @user = User.find(params[:id])
 
     render json: @user.follows
-  end 
-
-  # GET /users/followers/[:id]
-  def show_followers
-    @user = User.find(params[:id])
-
-    render json: @user.followers
   end
 
   # POST /users/follows
@@ -89,30 +55,59 @@ class UsersController < ApplicationController
     end
   end
 
-   def splatts
-     @user = User.find(params[:id])
+  # GET /users/1
+  # GET /users/1.json
+  def show
+    @user = User.find(params[:id])
 
-     render json: @user.splatts
+    render json: @user
   end
 
-  # GET  /users/splatts-feed/1
-  def splatts_feed
-    @feed = Splatt.find_by_sql("SELECT splatts.body, splatts.user_id, splatts.id, splatts.created_at FROM splatts JOIN follows ON follows.followed_id=splatts.user_id WHERE follows.follower_id=#{params[:id]} ORDER BY created_at DESC")
-
-    render json: @feed
+  # POST /users
+  # POST /users.json
+  def create
+    @user = User.new(user_params(params))
+    
+    if @user.save
+      render json: @user, status: :created, location: @user
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
   end
 
-    private
+  # PATCH/PUT /users/1
+  # PATCH/PUT /users/1.json
+  def update
+    @user = User.find(params[:id])
 
-   def user_params(params)
-     params.permit(:email, :password, :name, :blurb)
+    if @user.update(user_params(params))
+      head :no_content
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
   end
 
-   def set_headers 
-     headers ["Access-Control-Allow-Origin"] = '*'
-   end
+  # DELETE /users/1
+  # DELETE /users/1.json
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
 
-def cors_set_access_control_headers
+    head :no_content
+  end
+
+private
+  def user_params(params)
+	  logger.info "params:  #{params}"
+          params.permit(:id, :name, :email, :password, :blurb)
+  end
+
+  def set_headers
+	  headers['Access-Control-Allow-Origin'] = '*'
+  end
+
+  # For all responses in this controller, return the CORS access control headers.
+  def cors_set_access_control_headers
           headers['Access-Control-Allow-Origin'] = '*'
           headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
           headers['Access-Control-Max-Age'] = '1728000'
@@ -128,4 +123,5 @@ def cors_set_access_control_headers
           headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version'
           headers['Access-Control-Max-Age'] = '1728000'
   end
+
 end

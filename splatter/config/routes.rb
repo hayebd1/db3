@@ -1,16 +1,12 @@
 Splatter::Application.routes.draw do
-  # edit out from 3.2 lab: get "splatter/index"
-  resources :splatter, only: [:index]
   resources :splatts, except: [:new, :edit]
   match 'users', to: 'users#index', via: [:options]
   match 'users/:id', to: 'users#show', via: [:options]
   resources :users, except: [:new, :edit]
-
   get 'users/splatts/:id' => 'users#splatts'
   get 'users/splatts-feed/:id' => 'users#splatts_feed'
 
   get 'users/follows/:id' => 'users#show_follows'
-  get 'users/followers/:id' => 'users#show_followers'
   post 'users/follows' => 'users#add_follows'
   delete 'users/follows/:id/:follows_id' => 'users#delete_follows'
 
@@ -68,6 +64,4 @@ Splatter::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-
-  
 end
