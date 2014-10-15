@@ -1,6 +1,11 @@
 source 'https://rubygems.org'
 
+<<<<<<< HEAD
 
+=======
+gem 'mongoid', github: 'mongoid/mongoid'
+gem 'bson_ext'
+>>>>>>> c21c6420c5d02a70e188b3a410b5387218d28461
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
